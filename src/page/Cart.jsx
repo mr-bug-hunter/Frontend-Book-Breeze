@@ -156,7 +156,7 @@ const Cart = ()=>{
                         </Link>
                         <hr />
                         <p className="fst-italic">
-                            Hey! you get offer free Delivery!!!
+                            Hey! you get free offer Gift!
                         </p>
                     </div>
                 </div>
