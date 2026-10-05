@@ -48,7 +48,7 @@ const ProductDetails = ()=>{
 
             const data = await response.json()
 
-            const filteredBooks = data.books.filter(
+            const filteredBooks = (data.books || []).filter(
                 (item) => item._id !== book._id
             )
 
