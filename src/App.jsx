@@ -4,7 +4,7 @@ import Header from './components/Header'
 import Home from './page/Home'
 import Footer from './components/Footer'
 import CategoryPage from './page/CategoryPage'
-import AllBooks from './page/Allbooks'
+import AllBooks from '../page/AllBooks'
 import ProductDetails from "./page/ProductDetails"
 import { useState } from 'react'
 import HorrorSection from './page/HorrorSection'
