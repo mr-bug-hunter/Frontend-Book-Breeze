@@ -81,11 +81,7 @@ const HorrorSection = ({search = ""})=>{
                                 onChange={(e)=> setPrice(Number(e.target.value))}
                                 />
                                 
-                                <div className="d-flex justify-content-between">
-                                    <span>0</span>
-                                    <span>1500</span>
-                                    <span>3000</span>
-                                </div>
+                                
                             </div>
                             <hr />
                             {/* Rating */}
