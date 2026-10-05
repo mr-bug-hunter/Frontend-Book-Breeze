@@ -1,12 +1,13 @@
 import './App.css'
 import {  Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
+
 import Header from './components/Header'
 import Home from './page/Home'
 import Footer from './components/Footer'
 import CategoryPage from './page/CategoryPage'
-import AllBooks from '../page/AllBooks'
+import AllBooks from "./page/AllBooks"
 import ProductDetails from "./page/ProductDetails"
-import { useState } from 'react'
 import HorrorSection from './page/HorrorSection'
 import RomanceSection from './page/RomanceSection'
 import Cart from './page/Cart'
