@@ -22,6 +22,7 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
             <h6>Price: ${price}</h6>
             <input 
             type="range"
+            className="form-range"
             min="0"
             max="3000"
             value={price}
