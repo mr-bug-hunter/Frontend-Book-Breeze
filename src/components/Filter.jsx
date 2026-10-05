@@ -27,11 +27,7 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
             value={price}
             onChange={(e)=> setPrice(Number(e.target.value))}
             />
-            <div className="d-flex justify-content-between">
-                <span>0</span>
-                <span>1500</span>
-                <span>3000</span>
-            </div>
+            
         </div>
             <hr />
         

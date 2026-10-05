@@ -74,7 +74,6 @@ const HorrorSection = ({search = ""})=>{
                                 <h6 style={{ color : "#972828"}}>Price: ${price}</h6>
                                 <input 
                                 type="range"
-                                color="black"
                                 className="form-range"
                                 min="0"
                                 max="3000"
