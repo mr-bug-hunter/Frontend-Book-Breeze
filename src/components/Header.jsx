@@ -44,7 +44,7 @@ const Header = ({search, setSearch})=>{
         to="/profile" 
         className="btn" 
         style={{background: "#EFE9E3", marginRight: "15px"}}>
-        Login
+        User Profile
       </Link>
       
       {/* Search */}
