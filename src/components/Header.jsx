@@ -67,7 +67,7 @@ const Header = ({search, setSearch})=>{
         </Link>
         {/* Cart */}
         <Link to="/cart" className="text-decoration-none text-dark text-center me-4">
-          <div>🛒</div> <div style={{color: "black"}}>Cart</div>  
+          🛒  
           <span style={{color: "black"}}>({cartCount})</span>
         </Link>
         
