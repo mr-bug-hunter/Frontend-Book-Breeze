@@ -20,7 +20,7 @@ export function CartProvider({children}){
         }
     }
 
-    async function addToCart(productId, showToast = true){
+    async function addToCart(productId, showToast = true, quantity =1){
         try{
             const response = await fetch("https://backend-book-breeze-mu.vercel.app/books/cart", {
                 method: "POST",
@@ -28,7 +28,8 @@ export function CartProvider({children}){
                     "Content-Type" : "application/json"
                 },
                 body: JSON.stringify({
-                    productId: productId
+                    productId: productId,
+                    quantity: quantity
                 })
             })
             const data = await response.json()
@@ -86,7 +87,7 @@ export function CartProvider({children}){
 }
 
     return(
-        <CartContext.Provider value={{cartItems, addToCart, removeFromCart, decreaseQuantity}}>
+        <CartContext.Provider value={{cartItems, addToCart, removeFromCart, decreaseQuantity, fetchCart}}>
             {children}
         </CartContext.Provider>
     )

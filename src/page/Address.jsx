@@ -24,8 +24,6 @@ const Address = ()=>{
         pincode: ""
     })
 
-    
-
     useEffect(()=>{
         setAddresses(data?.addresses || [])
     }, [data])
@@ -42,21 +40,49 @@ const Address = ()=>{
     async function handleAddAddress(event){
         event.preventDefault()
         try{
-            const response = await fetch("https://backend-book-breeze-mu.vercel.app/addresses",{
+
+            let response, data
+
+            if(editAddress){
+                response = await fetch(
+                    `https://backend-book-breeze-mu.vercel.app/addresses/${editAddress._id}`,
+                    {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(formData)
+                    }
+                )
+                data = await response.json()
+                console.log("Updated:", data)
+
+                if(response.ok){
+                    setAddresses(
+                        addresses.map((addr)=>
+                            addr._id === editAddress._id ? data.address :addr
+                        )
+                    )
+                    toast.success("Address updated successfully")
+                }
+            }else{
+
+                response = await fetch("https://backend-book-breeze-mu.vercel.app/addresses",{
                 method: "POST",
                 headers:{
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(formData)
-            }
-        )
-        const data = await response.json()
+            })
+         data = await response.json()
         console.log(data)
         if(response.ok){
             setAddresses([
                 ...addresses,
                 data.address
             ])
+            toast.success("Address added Successfully")
+            }
+        }
+
             setFormData({
                 name: "",
                 phone: "",
@@ -65,11 +91,13 @@ const Address = ()=>{
                 state: "",
                 pincode:""
             })
-        }
-        }catch(error){
+            setEditAddress(null)
+        } catch(error){
             console.log(error)
+            toast.error("Someting went wrong")
         }
-    }
+ }
+    
 
     //Edit Address
     function handleEdit(address){
@@ -100,6 +128,7 @@ const Address = ()=>{
                 setAddresses(addresses.filter((address)=> address._id !== addressId))
                 if(selectedAddress?._id === addressId)
                     setSelectedAddress(null)
+                toast.success("Address deleted Successfully")
             }
         }catch(error){
             console.log(error)
@@ -160,12 +189,14 @@ const Address = ()=>{
                                 Phone Number
                             </label>
                             <input 
-                                type="number" 
+                                type="text" 
                                 name="phone" 
-                                placeholder="Enter phone number"
+                                placeholder="Enter 10-digit phone number"
                                 className="form-control"
                                 value={formData.phone}
                                 onChange={handleChange}
+                                maxLength={10}
+                                minLength={10}
                                 required
                                 />
                         </div>
@@ -223,12 +254,15 @@ const Address = ()=>{
                                 </label>
 
                                 <input 
-                                    type="number" 
+                                    type="text" 
                                     name="pincode" 
                                     className="form-control"
-                                    placeholder="Pincode"
+                                    placeholder="Enter 6-digit Pincode"
                                     value={formData.pincode}
+                                    maxLength="6"
                                     onChange={handleChange}
+                                    maxLength={6}
+                                    minLength={6}
                                     required
                                     />
                             </div>
@@ -236,7 +270,7 @@ const Address = ()=>{
 
                     <button 
                         type="submit" className="btn mt-4 shadow" style={{backgroundColor: "#C9B59C"}} >
-                            Add Address
+                            {editAddress ? "Update Address" : "Add Address"}
                     </button>
                 </form>
 

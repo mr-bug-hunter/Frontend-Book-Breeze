@@ -5,7 +5,7 @@ import  {toast} from "react-toastify"
 
 const Checkout = () =>{
     const navigate = useNavigate() 
-    const {cartItems, removeFromCart} = useCartContext() 
+    const {cartItems, fetchCart} = useCartContext() 
     const [placing, setPlacing] = useState(false) 
     const [orderPlaced, setOrderPlaced] = useState(false)
     
@@ -61,16 +61,19 @@ const Checkout = () =>{
             const data = await response.json()
             console.log("Order response:", data)
             if(response.ok){
+                //remove from localstroage 
+                localStorage.removeItem("selectedAddress")
+                toast.success("🎉 Order place successfully")
+                setOrderPlaced(true)//success screen dikhao
+
                 //cart empty(delete from backend)
                 for(const item of validItems){
                     await fetch(`https://backend-book-breeze-mu.vercel.app/books/cart/${item._id}`, {
                         method: "DELETE"
                     })
                 }
-                //remove from localstroage 
-                localStorage.removeItem("selectedAddress")
-                toast.success("🎉 Order place successfully")
-                setOrderPlaced(true)//success screen dikhao
+                await fetchCart()
+                
             }
         }catch(error){
             console.log(error)

@@ -10,13 +10,19 @@ const RomanceSection = ({search = ""})=>{
     const {addToCart} = useCartContext()
     const {addToWishlist} = useWishlistContext()
 
-    const [price, setPrice] = useState(3000)
-    const [rating, setRating] = useState(0)
-    const [sort, setSort] = useState("")
+    const [price, setPrice] = useState(Number(sessionStorage.getItem("romance_price")) || 3000)
+    const [rating, setRating] = useState(Number(sessionStorage.getItem("romance_rating")) || 0)
+    const [sort, setSort] = useState(sessionStorage.getItem("romance_sort") || "")
 
     const {data, loading, error} = useFetch(
         "https://backend-book-breeze-mu.vercel.app/books/category/Romance", {books: []}
     )
+
+    useEffect(()=>{
+        sessionStorage.setItem("romance_price", price)
+        sessionStorage.setItem("romance_rating", rating)
+        sessionStorage.setItem("romance_sort", sort)
+    }, [price, rating, sort])
 
     if(loading){
         return(
@@ -65,6 +71,9 @@ const RomanceSection = ({search = ""})=>{
                                         setPrice(3000)
                                         setRating(0)
                                         setSort("")
+                                        sessionStorage.removeItem("romance_price")
+                                        sessionStorage.removeItem("romance_rating")
+                                        sessionStorage.removeItem("romance_sort")
                                     }}
                                     >
                                         Clear
@@ -127,8 +136,14 @@ const RomanceSection = ({search = ""})=>{
 
                         </div>
 
-                        <div className="col-12 col-md-9">
-                            <div className="row g-4">
+                        <div className="col-12 col-md-9 h-100 ">
+                            { filteredBooks.length === 0 ? (
+                                <div className="text-center py-5">
+                                    <h4>No books found in Romance Section</h4>
+                                    <p>Try Changing filters</p>
+                                </div>
+                            ): (
+                                <div className="row g-4">
                                     {filteredBooks.map((book)=>(
                                         <div className="col-12 col-sm-6 col-md-4" key={book._id}>
                                             <div className="card h-100">
@@ -149,20 +164,20 @@ const RomanceSection = ({search = ""})=>{
                                                     />
                                                 </Link>
                                                 <div className="card-body shadow" style={{background: "#FBEFEF"}}>
-                                                    <h5 className="card-title" >
+                                                    <h5 className="card-title" style={{minHeight: "48px", fontSize: "1.2rem"}} >
                                                         <Link to={`/product/${book._id}`}
                                                         style={{color: "#500073"}}
                                                         className="text-decoration-none"
                                                         >{book.title}</Link> 
                                                         </h5>
-                                                        <p className="card-text">
-                                                            {book.author}
+                                                        <p className="card-text small">
+                                                           Author: {book.author}
                                                         </p>
                                                         <p>
-                                                            ⭐{book.rating}
+                                                            Rating: ⭐{book.rating}
                                                         </p>
-                                                        <p className="fw-bold">
-                                                            ${book.price}
+                                                        <p className="fw-bold mb-3">
+                                                           Price: ${book.price}
                                                         </p>
 
                                                         <button className="w-100 py-2 m-0 text-center rounded" 
@@ -178,6 +193,8 @@ const RomanceSection = ({search = ""})=>{
                                         </div>
                                     ))}
                             </div>
+                            )}
+                            
 
                         </div>
 

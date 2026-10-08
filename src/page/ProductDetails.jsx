@@ -1,6 +1,6 @@
 import useFetch from "../Hooks/useFetch"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
 import useCartContext from "../context/CartContext"
 import useWishlistContext from "../context/WishlistContext"
@@ -9,11 +9,14 @@ import useWishlistContext from "../context/WishlistContext"
 
 const ProductDetails = ()=>{
 
+    const navigate = useNavigate()
+
     const {productId} = useParams()
     const [book, setBooks] = useState(null)
     const [recommendedBooks, setRecommendedBooks] = useState([])
     const {addToCart} = useCartContext()
     const {addToWishlist} = useWishlistContext()
+    const [quantity, setQuantity] = useState(1)
     
     const {loading, error} = useFetch(
         "https://backend-book-breeze-mu.vercel.app/books"
@@ -83,6 +86,13 @@ if(loading){
     return(
         <div style={{backgroundColor: "#EFE9E3"}} className="min-vh-100">
             <div className="container py-5">
+                <button
+                    className="btn btn-outline-dark mb-3"
+                    onClick={() => navigate(-1)}
+                    >
+                        Back
+                </button>
+
                 <div className="row g-5">
                     {/* Book Image */}
                     <div className="col-12 col-md-4">
@@ -107,22 +117,48 @@ if(loading){
                         <div className="pt-md-3">
                             <h2 className="fw-bold">{book?.title}</h2>
                             
-                            <p className="text-muted mb-2" >By {book?.author} </p>
-                            <p className="mb-3" >⭐ {book?.rating}</p> <hr />
-                            <h3 className="fw-bold" >${book?.price}</h3>
+                            <p className="text-muted mb-2" ><strong>Author By</strong> {book?.author} </p>
+                            <p className="mb-3" ><strong>Rating:</strong> ⭐ {book?.rating}</p> <hr />
+                            <h3 className="fw-bold" > Price: ${book?.price}</h3>
+                            <div className="d-flex align-items-center gap-3 mb-3">
+                                <span className="fw-bold"> Quantity: </span>
+                                <div className="d-flex align-items-center rounded">
+                                    <button
+                                        className="btn btn-light"
+                                        onClick={()=> setQuantity(Math.max(1, quantity -1))}
+                                        disabled={quantity <= 1}
+                                        >
+                                        -
+                                    </button>
+                                    <span className="px-3 fw-bold">{quantity}</span>
+                                    <button
+                                        className="btn btn-light"
+                                        onClick={() => setQuantity(quantity +1)}
+                                        >
+                                        +
+                                    </button>
+
+                                </div>
+                            </div>
                             <p className="text-muted" >Category: {book?.categories}</p> <hr />
                             <div className="d-flex gap-3">
-                                <Link 
+                                <button 
                                 className="btn btn-lg w-50" 
                                 style={{backgroundColor: "#C9B59C"}}
-                                onClick={()=> addToCart(book?._id)}
+                                onClick={()=> {addToCart(book?._id, true, quantity)}}
                                 >
                                     Add to Cart
-                                </Link>
+                                </button>
                                 
-                                <Link to="/addresses" className="btn btn-lg btn-dark w-50">
+                                <button 
+                                    className="btn btn-lg btn-dark w-50"
+                                    onClick={async()=>{
+                                        await addToCart(book?._id, false, quantity)
+                                        navigate("/addresses")
+                                    }}
+                                    >
                                     Buy Now
-                                </Link>
+                                </button>
                                 
                                 
                             </div>
@@ -184,15 +220,15 @@ if(loading){
                     </Link>
 
                     <p className="mb-2">
-                        ⭐ {item.rating}
+                       Rating: ⭐ {item.rating}
                     </p>
 
                     <p className="fw-bold">
-                        ₹{item.price}
+                        Price: ₹{item.price}
                     </p>
 
                     <button
-                        className="btn w-100"
+                        className="btn w-100 shadow"
                         style={{
                             backgroundColor: "#C9B59C"
                         }}

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import useCartContext from "../context/CartContext"
 import useWishlistContext from "../context/WishlistContext"
 
@@ -6,6 +7,7 @@ import useWishlistContext from "../context/WishlistContext"
 
 const Header = ({search, setSearch})=>{
 
+  const navigate = useNavigate()
   const {cartItems} = useCartContext()
   const {wishlistItems } = useWishlistContext()
 
@@ -55,20 +57,24 @@ const Header = ({search, setSearch})=>{
         type="search" 
         placeholder="search books.." 
         value={search}
-        onChange={(e)=> setSearch(e.target.value)}
+        onChange={(e)=> {
+          setSearch(e.target.value)
+          if (window.location.pathname === "/"){
+            navigate("/products")
+          }
+        }}
         style={{ height: "38px"}}
         />
         </form>
         {/* Wishlist */}
-        <Link to="/wishlist" className="text-decoration-none text-primary text-center me-4" >
-          <div className="fs-3" style={{color: "black"}}>
-            ♡
-            </div><span style={{color: "black"}}>({wishlistCount})</span>
+        <Link to="/wishlist" className="text-decoration-none text-dark text-center me-4" >
+            🩶
+            <span>({wishlistCount})</span>
         </Link>
         {/* Cart */}
         <Link to="/cart" className="text-decoration-none text-dark text-center me-4">
-          🛒  
-          <span style={{color: "black"}}>({cartCount})</span>
+          🛒
+          <span>({cartCount})</span>
         </Link>
         
       

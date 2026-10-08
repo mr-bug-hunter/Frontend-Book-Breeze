@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
 import useWishlistContext from "../context/WishlistContext"
@@ -13,13 +13,19 @@ const CategoryPage = ({search = ""})=>{
     const {addToWishlist} = useWishlistContext()
     const {addToCart} = useCartContext()
 
-    const [price, setPrice] = useState(3000)
-    const [rating, setRating] = useState(0)
-    const [sort, setSort] = useState("")
+    const [price, setPrice] = useState(Number(sessionStorage.getItem("category_price"))|| 3000)
+    const [rating, setRating] = useState(Number(sessionStorage.getItem("category_rating")) || 0)
+    const [sort, setSort] = useState(sessionStorage.getItem("category_sort") || "")
     
     const {data, loading, error} = useFetch(
         `https://backend-book-breeze-mu.vercel.app/books/category/${categoryName}`, {books: []}
     )
+
+    useEffect(()=>{
+        sessionStorage.setItem("category_price", price)
+        sessionStorage.setItem("category_rating", rating)
+        sessionStorage.setItem("category_sort", sort)
+    }, [price, rating, sort])
 
     if(loading){
         return(
@@ -69,6 +75,9 @@ const CategoryPage = ({search = ""})=>{
                                     setPrice(3000)
                                     setRating(0)
                                     setSort("")
+                                    sessionStorage.removeItem("category_price")
+                                    sessionStorage.removeItem("category_rating")
+                                    sessionStorage.removeItem("category_sort")
                                 }}
                                 >
                                     Clear
@@ -136,7 +145,13 @@ const CategoryPage = ({search = ""})=>{
                 </div>
 
                 <div className="col-12 col-md-9" >
-                    <div className="row g-4" >
+                    { filteredBooks.length === 0 ? (
+                        <div className="text-center py-5">
+                            <h4 className="text-muted" >No books found in this category</h4>
+                            <p className="text-muted">Try changing filters</p>
+                        </div>
+                    ):(
+                        <div className="row g-4" >
                 {filteredBooks.map((book)=>(
                     <div className="col-12 col-sm-6 col-md-4 "
                         key={book._id}
@@ -162,7 +177,7 @@ const CategoryPage = ({search = ""})=>{
                                 ♡
                             </button>
                             <div className="card-body">
-                                <h5 className="card-title">
+                                <h5 className="card-title" style={{ minHeight: "48px", fontSize: "1.2rem"}}>
                                     <Link
                                         to={`/product/${book._id}`}
                                         className="text-decoration-none"
@@ -172,20 +187,20 @@ const CategoryPage = ({search = ""})=>{
                                     </Link>
                                 </h5>
                             
-                                <p className="card-text">
-                                    {book.author}
+                                <p className="card-text small">
+                                   Author: {book.author}
                                 </p>
 
                                 <p>
-                                    ⭐{book.rating}
+                                   Rating: ⭐{book.rating}
                                 </p>
 
                                 <p className="fw-bold">
-                                    ${book.price}
+                                    Price: ${book.price}
                                 </p>
 
                                     <button
-                                    className="w-100 py-2 m-0 text-center"
+                                    className="w-100 py-2 m-0 text-center rounded shadow"
                                     style={{background : "#C9B59C"}}
                                     onClick={()=> addToCart(book?._id)}
                                     >
@@ -196,8 +211,8 @@ const CategoryPage = ({search = ""})=>{
                         </div>
                     </div>
                 ))}
-
             </div>
+            )}
         </div>
     </div>
     </div>

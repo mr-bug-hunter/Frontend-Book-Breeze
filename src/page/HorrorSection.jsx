@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import useCartContext from "../context/CartContext"
 import useWishlistContext from "../context/WishlistContext"
@@ -9,13 +9,19 @@ const HorrorSection = ({search = ""})=>{
     const {addToCart} = useCartContext()
     const {addToWishlist} = useWishlistContext()
 
-    const [price, setPrice] = useState(3000)
-    const [rating, setRating] = useState(0)
-    const [sort, setSort] = useState("")
+    const [price, setPrice] = useState(Number(sessionStorage.getItem("horror_price")) || 3000)
+    const [rating, setRating] = useState(Number(sessionStorage.getItem("horror_rating")) || 0)
+    const [sort, setSort] = useState(sessionStorage.getItem("horror_sort")|| "")
 
     const {data, loading, error}= useFetch(
         "https://backend-book-breeze-mu.vercel.app/books/category/Horror", {books: []}
     )
+
+    useEffect(()=>{
+        sessionStorage.setItem("horror_price", price)
+        sessionStorage.setItem("horror_rating", rating)
+        sessionStorage.setItem("horror_sort", sort)
+    }, [price, rating, sort])
 
     if(loading){
         return(
@@ -63,6 +69,9 @@ const HorrorSection = ({search = ""})=>{
                                     setPrice(3000)
                                     setRating(0)
                                     setSort("")
+                                    sessionStorage.removeItem("horror_price")
+                                    sessionStorage.removeItem("horror_rating")
+                                    sessionStorage.removeItem("horror_sort")
                                 }}
                                 >
                                     Clear
@@ -127,8 +136,14 @@ const HorrorSection = ({search = ""})=>{
 
                 
 
-                <div className="col-12 col-md-9">
-                    <div className="row g-4">
+                <div className="col-12 col-md-9 h-100">
+                    { filteredBooks.length === 0 ? (
+                        <div className="text-center py-5">
+                            <h4 className="text-light" >No books found in Horror Section</h4>
+                            <p className="text-light">Try changing filters</p>
+                        </div>
+                    ): (
+                        <div className="row g-4">
                         {filteredBooks.map((book)=>(
                             <div className="col-12 col-sm-6 col-md-4" key={book._id}>
                                 <div className="card h-100">
@@ -149,23 +164,23 @@ const HorrorSection = ({search = ""})=>{
                                         />
                                     </Link>
                                     <div className="card-body">
-                                        <h5 className="card-title" >
+                                        <h5 className="card-title" style={{ minHeight: "48px", fontSize: "1.2rem" }} >
                                             <Link to={`/product/${book._id}`} 
                                             style={{color: "#500073"}}
                                             className="text-decoration-none"
                                             >{book.title}</Link> 
                                         </h5>
-                                        <p className="card-text">
-                                            {book.author}
+                                        <p className="card-text small" style={{minHeight : "30px"}}>
+                                           Author: {book.author}
                                         </p>
-                                        <p>
-                                            ⭐{book.rating}
+                                        <p className="mb-2">
+                                           Rating: ⭐{book.rating}
                                         </p>
-                                        <p className="fw-bold">
-                                            ${book.price}
+                                        <p className="fw-bold mb-3">
+                                           Price: ${book.price}
                                         </p>
 
-                                        <button className="w-100 py-2 m-0 text-center rounded text-light" 
+                                        <button className="btn w-100 mt-auto text-center rounded text-light" 
                                         style={{background: "#464858"}}
                                         onClick={()=> addToCart(book?._id)}
                                         >
@@ -177,6 +192,8 @@ const HorrorSection = ({search = ""})=>{
                             </div>
                         ))}
                     </div>
+                    )}
+                    
                     </div>
                 </div>
         </div>

@@ -20,6 +20,7 @@ const Cart = ()=>{
         const discount = validCartItem.length > 0 ? 49 : 0
         const deliveryCharges = validCartItem.length > 0 ? 69 :0
         const totalAmount = totalPrice - discount + deliveryCharges
+        const emptyCart = validCartItem.length === 0
     
         const {data, loading, error}= useFetch(
             "https://backend-book-breeze-mu.vercel.app/books/cart", {cartItems: []}
@@ -48,7 +49,16 @@ const Cart = ()=>{
         <div className="row">
             {/* Cart Items */}
             <div className="col-md-8">
-                {cartItems.filter((item)=> item.productId)
+                { emptyCart ? (
+                    <div className="card shadow-sm p-5 text-center">
+                        <h4>Cart is empty 🛒</h4>
+                        <p className="text-muted">Add some books to continue</p>
+                        <Link to="/products" className="btn btn-dark w-auto mx-auto">
+                            Browser Books
+                        </Link>
+                    </div>
+                ):(
+                    cartItems.filter((item)=> item.productId)
                 .map((item)=> (
                     <div className="card mb-3 shadow" key={item._id}>
                         <div className="row g-0">
@@ -76,27 +86,25 @@ const Cart = ()=>{
                                     <p>
                                         Price: ${item.productId?.price}
                                     </p>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <p>Quantity: </p>
-
+                                    <div className="d-flex align-items-center gap-3 mb-3">
+                                        <span>Quantity: </span>
+                                        <div className="d-flex align-items-center rounded">
                                         <button
                                         className="btn btn-outline-secondary"
-                                        onClick={()=> decreaseQuantity(item._id, false)}
+                                        onClick={()=> decreaseQuantity(item._id, true)}
                                         >
                                             -
                                         </button>
-
-                                        <p className="mx-3">
+                                        <p className="px-3">
                                             {item.quantity}
                                             </p>
-
                                     <button
                                     className="btn btn-outline-secondary"
-                                    onClick={()=> addToCart(item.productId._id, false)}
+                                    onClick={()=> addToCart(item.productId._id, true)}
                                     >
                                          +
                                     </button>
-                                        
+                                        </div>
                                     </div>
 
                                     <p>Available Stock: {item.productId.stock}</p>
@@ -128,7 +136,9 @@ const Cart = ()=>{
                         </div>
 
                     </div>
-                ))}
+                ))
+                )}
+                
             </div>
 
             {/* Price Detials */}
@@ -151,9 +161,16 @@ const Cart = ()=>{
                             Total Amount: ${totalAmount}
                         </h5>
                         <hr />
+                        { emptyCart ? (
+                            <button className="btn btn-primary w-100" disabled>
+                                Place Order
+                            </button>
+                        ):(
                         <Link to="/checkout" className="btn btn-primary w-100">
                             Place Order
                         </Link>
+                        )}
+                        
                         <hr />
                         <p className="fst-italic">
                             Hey! you get free offer Gift!

@@ -1,6 +1,7 @@
 import useWishlistContext from "../context/WishlistContext"
 import useCartContext from "../context/CartContext"
 import useFetch from "../Hooks/useFetch"
+import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
 
 const wishlist = ()=>{
@@ -34,6 +35,15 @@ const wishlist = ()=>{
                     My Wishlist
                 </h2>
 
+            { wishlistItems.length === 0 ? (
+                <div className="text-center py-5">
+                        <h4>Wishlist is empty 💔</h4>
+                        <p className="text-muted">Add some books to continue</p>
+                        <Link to="/products" className="btn btn-dark w-auto mx-auto">
+                            Browser Books
+                        </Link>
+                    </div>
+            ): (
                 <div className="row ">
                     {wishlistItems.map((item)=>(
                         <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
@@ -83,6 +93,8 @@ const wishlist = ()=>{
                         </div>
                     ))}
                 </div>
+            )}
+                
             </div>
         </div>
     )

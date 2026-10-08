@@ -10,6 +10,10 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
                 setRating(0)
                 setCategory("")
                 setSort("")
+                sessionStorage.removeItem("filter_price")
+                sessionStorage.removeItem("filter_rating")
+                sessionStorage.removeItem("filter_category")
+                sessionStorage.removeItem("filter_sort")
             }}
             >
                 Clear

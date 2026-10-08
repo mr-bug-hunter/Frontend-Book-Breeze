@@ -10,14 +10,21 @@ const AllBooks = ({search})=>{
     const {addToCart} = useCartContext()
 
     
-    const [price, setPrice] = useState(3000)
-    const [rating, setRating] = useState(0)
-    const [category, setCategory] = useState("")
-    const [sort, setSort] = useState("")
+    const [price, setPrice] = useState(Number(sessionStorage.getItem("filter_price")) || (3000)) 
+    const [rating, setRating] = useState(Number(sessionStorage.getItem("filter_rating"))|| 0) 
+    const [category, setCategory] = useState(sessionStorage.getItem("filter_category") || "")
+    const [sort, setSort] = useState(sessionStorage.getItem("filter_sort")|| "")
 
     const {data, loading, error} =useFetch(
         "https://backend-book-breeze-mu.vercel.app/books", {allBooks: []}
     )
+
+    useEffect(()=>{
+        sessionStorage.setItem("filter_price", price)
+        sessionStorage.setItem("filter_rating", rating)
+        sessionStorage.setItem("filter_category", category)
+        sessionStorage.setItem("filter_sort", sort)
+    }, [price, rating, category, sort])
     
     if(loading){
         return(
@@ -70,8 +77,14 @@ const AllBooks = ({search})=>{
                     </div>
 
                     {/* Books*/}
-                    <div className="col-12 col-md-9">
-                        <div className="row g-4">
+                    <div className="col-12 col-md-9 mb-4">
+                        { filteredBooks.length === 0 ? (
+                            <div className="text-center py-5">
+                                <h4 className="text-muted">No books found</h4>
+                                <p className="text-muted">Try changing filters</p>
+                            </div>
+                        ):(
+                            <div className="row g-4">
                             {filteredBooks.map((book)=>(
                                 <div className="col-12 col-sm-6 col-md-4" key={book._id}>
                                     <div className="card h-100">
@@ -92,18 +105,18 @@ const AllBooks = ({search})=>{
                                                 ♡
                                             </button>
                                         <div className="card-body">
-                                            <h5 className="card-title">
-                                                <Link to={`/product/${book._id}`}
+                                            <Link to={`/product/${book._id}`}
                                                 style={{color: "#4A4A4A"}}
                                                 className="text-decoration-none"
                                                 >
+                                            <h5 className="card-title" style={{ minHeight: "48px", fontSize: "1.2rem" }} >
                                                 {book.title}
-                                                </Link>
-                                                
                                                 </h5>
-                                            <p>⭐{book.rating}</p>
-                                            <p className="fw-bold">${book.price}</p>
-                                            <button className="btn w-100" 
+                                                </Link>
+                                                <p className="card-text small" >Author: {book.author}</p>
+                                            <p className="mb-2">Rating: ⭐{book.rating}</p>
+                                            <p className="fw-bold mb-3">Price: ${book.price}</p>
+                                            <button className="btn w-100 shadow" 
                                             style={{background : "#C9B59C"}}
                                             onClick={()=> addToCart(book?._id)}
                                             >
@@ -115,6 +128,8 @@ const AllBooks = ({search})=>{
                                 </div>
                             ))}
                         </div>
+                        )}
+                        
                         
                     </div>
                 </div>
