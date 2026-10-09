@@ -3,9 +3,11 @@ import { Link } from "react-router-dom"
 import useCartContext from "../context/CartContext"
 import useWishlistContext from "../context/WishlistContext"
 import useFetch from "../Hooks/useFetch"
+import { useNavigate } from "react-router-dom"
 
 const HorrorSection = ({search = ""})=>{
 
+    const navigate = useNavigate()
     const {addToCart} = useCartContext()
     const {addToWishlist} = useWishlistContext()
 
@@ -91,6 +93,23 @@ const HorrorSection = ({search = ""})=>{
                                 />
                             </div>
                             <hr />
+
+                            {/* Category Filter */}
+                            <div>
+                                <h6 style={{color: "#972828"}}>Category</h6>
+                                {["Sci-Fi", "Novel", "Autobiography", "Political Fiction", "Horror", "Romance"].map((cat) => (
+                                    <div key={cat}>
+                                        <input 
+                                            type="radio" 
+                                            name="categorySwitch" 
+                                            checked={cat === "Horror"}
+                                            onChange={()=> navigate(`/category/${cat}`)}
+                                             />
+                                             <label className="ms-2">{cat}</label>
+
+                                    </div>
+                                ))}
+                            </div>
                             {/* Rating */}
                             <div>
                                 <h6 style={{ color : "#972828"}}>Rating</h6>

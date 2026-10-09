@@ -4,11 +4,13 @@ import { Link } from "react-router-dom"
 import useWishlistContext from "../context/WishlistContext"
 import useCartContext from "../context/CartContext"
 import useFetch from "../Hooks/useFetch"
+import { useNavigate } from "react-router-dom"
 
 
 const CategoryPage = ({search = ""})=>{
 
 
+    const navigate = useNavigate()
     const {categoryName}= useParams()
     const {addToWishlist} = useWishlistContext()
     const {addToCart} = useCartContext()
@@ -44,7 +46,7 @@ const CategoryPage = ({search = ""})=>{
         )
     }
 
-    let filteredBooks = data.books
+    let filteredBooks = (data.books || [])
             .filter((book)=> book.title?.toLowerCase().includes(search.toLowerCase()))
             .filter((book)=> book.price <= price)
             .filter((book)=> book.rating >= rating)
@@ -99,6 +101,23 @@ const CategoryPage = ({search = ""})=>{
                             </div>
                             <hr />
 
+
+                            {/* Category Filter */}
+                            <div>
+                                <h6>Category</h6>
+                                {["Sci-Fi", "Novel", "Autobiography", "Political Fiction", "Horror", "Romance"].map((cat)=> (
+                                    <div key={cat}>
+                                        <input 
+                                            type="radio" 
+                                            name="categorySwitch" 
+                                            checked={categoryName === cat}
+                                            onChange={() => navigate(`/category/${cat}`)}
+                                            />
+                                            <label className="ms-2">{cat}</label>
+                                    </div>
+                                ))}
+                            </div>
+                            <hr />
                             {/* Rating */}
                             <div>
                                 <h6>Rating</h6>

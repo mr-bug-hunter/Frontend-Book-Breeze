@@ -194,9 +194,11 @@ const Address = ()=>{
                                 placeholder="Enter 10-digit phone number"
                                 className="form-control"
                                 value={formData.phone}
-                                onChange={handleChange}
+                                onChange={(e)=>{
+                                    const value = e.target.value.replace(/\D/g,"")
+                                    setFormData({...formData, phone: value})
+                                }}
                                 maxLength={10}
-                                minLength={10}
                                 required
                                 />
                         </div>
@@ -259,10 +261,11 @@ const Address = ()=>{
                                     className="form-control"
                                     placeholder="Enter 6-digit Pincode"
                                     value={formData.pincode}
-                                    maxLength="6"
-                                    onChange={handleChange}
+                                    onChange={(e)=>{
+                                    const value = e.target.value.replace(/\D/g,"")
+                                    setFormData({...formData, pincode: value})
+                                }}
                                     maxLength={6}
-                                    minLength={6}
                                     required
                                     />
                             </div>

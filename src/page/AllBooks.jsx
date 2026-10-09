@@ -12,8 +12,10 @@ const AllBooks = ({search})=>{
     
     const [price, setPrice] = useState(Number(sessionStorage.getItem("filter_price")) || (3000)) 
     const [rating, setRating] = useState(Number(sessionStorage.getItem("filter_rating"))|| 0) 
-    const [category, setCategory] = useState(sessionStorage.getItem("filter_category") || "")
+    const [category, setCategory] = useState(
+        JSON.parse(sessionStorage.getItem("filter_category") || "[]"))
     const [sort, setSort] = useState(sessionStorage.getItem("filter_sort")|| "")
+
 
     const {data, loading, error} =useFetch(
         "https://backend-book-breeze-mu.vercel.app/books", {allBooks: []}
@@ -22,7 +24,7 @@ const AllBooks = ({search})=>{
     useEffect(()=>{
         sessionStorage.setItem("filter_price", price)
         sessionStorage.setItem("filter_rating", rating)
-        sessionStorage.setItem("filter_category", category)
+        sessionStorage.setItem("filter_category", JSON.stringify(category))
         sessionStorage.setItem("filter_sort", sort)
     }, [price, rating, category, sort])
     
@@ -47,7 +49,7 @@ const AllBooks = ({search})=>{
             .filter((book)=> book.title.toLowerCase().includes(search.toLowerCase()))
             .filter((book)=> book.price <= price)
             .filter((book)=> book.rating >= rating)
-            .filter((book)=> (category ? book.categories === category : true))
+            .filter((book)=> category.length === 0 ? true : category.includes(book.categories))
 
         if(sort === "low"){
             filteredBooks = [...filteredBooks].sort((a,b) => a.price - b.price)

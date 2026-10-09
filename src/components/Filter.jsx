@@ -8,7 +8,7 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
             onClick={()=>{
                 setPrice(3000)
                 setRating(0)
-                setCategory("")
+                setCategory([])
                 setSort("")
                 sessionStorage.removeItem("filter_price")
                 sessionStorage.removeItem("filter_rating")
@@ -39,7 +39,23 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
         {/* Category */}
         <div>
             <h6>Category</h6>
-            <div>
+            {["Sci-Fi", "Novel", "Autobiography", "Political Fiction", "Horror", "Romance"].map((cat)=>(
+                <div key={cat}>
+                    <input 
+                        type="checkbox" 
+                        checked={category.includes(cat)}
+                        onChange={(e) => {
+                            if(e.target.checked){
+                                setCategory([...category, cat])
+                            }else{
+                                setCategory(category.filter((c)=> c !== cat))
+                            }
+                        }}
+                        />
+                    <label className="ms-2">{cat}</label>
+                </div>
+            ))}
+            {/* <div>
                 <input 
                 type="checkbox"
                 checked={category === "Sci-Fi"}
@@ -89,7 +105,7 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
                         onChange={(e) => setCategory(e.target.checked ? "Romance" : "")}
                     />
                     <label className="ms-2">Romance</label>
-                </div>
+                </div> */}
         </div>
         <hr />
 
