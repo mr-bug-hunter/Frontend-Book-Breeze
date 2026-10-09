@@ -33,7 +33,7 @@ const Header = ({search, setSearch})=>{
           {/* Navigation */}
       <ul className="navbar-nav me-auto">
         <li className="nav-item">
-          <Link className="nav-link" to="/">Home</Link>
+          <Link className="nav-link" to="/">Explore</Link>
         </li>
 
         <li className="nav-item">
