@@ -12,8 +12,8 @@ const Header = ({search, setSearch})=>{
   const {wishlistItems } = useWishlistContext()
 
 
-  const cartCount = cartItems.filter(item => item.productId).length
-  const wishlistCount = wishlistItems.length
+  const cartCount = (cartItems || []).filter(item => item.productId).length
+  const wishlistCount = (wishlistItems || []).length
     return (
         <div >
         <nav className="navbar navbar-expand-lg bg-body-tertiary shadow-sm">

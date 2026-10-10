@@ -3,20 +3,19 @@ import { Link } from "react-router-dom"
 import useCartContext from "../context/CartContext"
 import useWishlistContext from "../context/WishlistContext"
 import useFetch from "../Hooks/useFetch"
-import { useNavigate } from "react-router-dom"
 
 const HorrorSection = ({search = ""})=>{
 
-    const navigate = useNavigate()
     const {addToCart} = useCartContext()
     const {addToWishlist} = useWishlistContext()
 
     const [price, setPrice] = useState(Number(sessionStorage.getItem("horror_price")) || 3000)
     const [rating, setRating] = useState(Number(sessionStorage.getItem("horror_rating")) || 0)
     const [sort, setSort] = useState(sessionStorage.getItem("horror_sort")|| "")
+    const [category, setCategory] = useState(["Horror"])
 
     const {data, loading, error}= useFetch(
-        "https://backend-book-breeze-mu.vercel.app/books/category/Horror", {books: []}
+        "https://backend-book-breeze-mu.vercel.app/books", {allBooks: []}
     )
 
     useEffect(()=>{
@@ -42,10 +41,11 @@ const HorrorSection = ({search = ""})=>{
         )
     }
 
-    let filteredBooks = data.books
+    let filteredBooks = (data.allBooks || [])
         .filter((book)=> book.title?.toLowerCase().includes(search.toLowerCase()))
         .filter((book)=> book.price <= price)
         .filter((book)=> book.rating >= rating)
+        .filter((book)=> category.length === 0 ? true : category.includes(book.categories))
 
         if(sort === "low"){
             filteredBooks = [...filteredBooks].sort((a, b)=> a.price - b.price)
@@ -71,6 +71,7 @@ const HorrorSection = ({search = ""})=>{
                                     setPrice(3000)
                                     setRating(0)
                                     setSort("")
+                                    setCategory(["Horror"])
                                     sessionStorage.removeItem("horror_price")
                                     sessionStorage.removeItem("horror_rating")
                                     sessionStorage.removeItem("horror_sort")
@@ -100,10 +101,16 @@ const HorrorSection = ({search = ""})=>{
                                 {["Sci-Fi", "Novel", "Autobiography", "Political Fiction", "Horror", "Romance"].map((cat) => (
                                     <div key={cat}>
                                         <input 
-                                            type="radio" 
+                                            type="checkbox" 
                                             name="categorySwitch" 
-                                            checked={cat === "Horror"}
-                                            onChange={()=> navigate(`/category/${cat}`)}
+                                            checked={category.includes(cat)}
+                                            onChange={(e)=> {
+                                                if(e.target.checked){
+                                                    setCategory([...category, cat])
+                                                }else{
+                                                    setCategory(category.filter((c) => c !== cat))
+                                                }
+                                            }}
                                              />
                                              <label className="ms-2">{cat}</label>
 
