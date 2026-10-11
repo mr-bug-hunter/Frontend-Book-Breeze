@@ -134,13 +134,16 @@ if(loading){
                                     <button
                                         className="btn btn-light"
                                         onClick={() => setQuantity(quantity +1)}
+                                        disabled={quantity >= book?.stock}
                                         >
                                         +
                                     </button>
-
                                 </div>
+                                
                             </div>
-                            <p className="text-muted" >Category: {book?.categories}</p> <hr />
+                            <small className="text-muted"> Available in Stock : ({book?.stock})</small> <br /><br />
+                            <p className="text-muted" >Category: {book?.categories}</p>
+                             <hr />
                             <div className="d-flex gap-3">
                                 <button 
                                 className="btn btn-lg w-50" 
