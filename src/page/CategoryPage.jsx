@@ -12,7 +12,7 @@ const CategoryPage = ({search = ""})=>{
 
     
     const {categoryName}= useParams()
-    const {addToWishlist} = useWishlistContext()
+    const {wishlistItems, addToWishlist, removeFromWishlist} = useWishlistContext()
     const {addToCart} = useCartContext()
 
     const [price, setPrice] = useState(Number(sessionStorage.getItem("category_price"))|| 3000)
@@ -29,6 +29,13 @@ const CategoryPage = ({search = ""})=>{
         sessionStorage.setItem("category_rating", rating)
         sessionStorage.setItem("category_sort", sort)
     }, [price, rating, sort])
+
+    const isInWishlist = (bookId) => wishlistItems.some(w => w.productId?._id === bookId)
+
+    const toggleWishlist = (bookId)=>{
+        const item = wishlistItems.find(w => w.productId?._id === bookId)
+        item ? removeFromWishlist(item._id) : addToWishlist(bookId)
+    }
 
     if(loading){
         return(
@@ -129,18 +136,23 @@ const CategoryPage = ({search = ""})=>{
                             <hr />
                             {/* Rating */}
                             <div>
-                                <h6>Rating</h6>
-                                {[4,3,2,1].map((star)=>(
-                                    <div key={star}>
+                                <h6>Rating: {rating} ★ & above</h6>
+                                    
                                         <input 
-                                        type="radio" 
-                                        name="rating"
-                                        checked={rating === star}
-                                        onChange={()=> setRating(star)}
+                                        type="range" 
+                                        className="form-range"
+                                        min="0"
+                                        max="4"
+                                        step="1"
+                                        value={rating}
+                                        onChange={(e)=> setRating(Number(e.target.value))}
                                         />
-                                        <label className="ms-2">{star} Star & above</label>
-                                    </div>
-                                ))}
+                                        <div className="d-flex justify-content-between">
+                                            <span>0</span>
+                                            <span>4</span>
+                                        </div>
+                                    
+                                
                             </div>
                             <hr />
 
@@ -200,9 +212,9 @@ const CategoryPage = ({search = ""})=>{
                             <button
                             className="btn btn-light position-absolute top-0 end-0 m-2"
                             style={{ zIndex: 2}}
-                            onClick={()=> addToWishlist(book._id)}
+                            onClick={()=> toggleWishlist(book._id)}
                             >
-                                ♡
+                                {isInWishlist(book._id) ? "❤️" : "♡"}
                             </button>
                             <div className="card-body">
                                 <h5 className="card-title" style={{ minHeight: "48px", fontSize: "1.2rem"}}>

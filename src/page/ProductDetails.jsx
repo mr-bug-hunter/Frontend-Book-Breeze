@@ -2,6 +2,7 @@ import useFetch from "../Hooks/useFetch"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
+import { toast } from "react-toastify";
 import useCartContext from "../context/CartContext"
 import useWishlistContext from "../context/WishlistContext"
 
@@ -15,9 +16,11 @@ const ProductDetails = ()=>{
     const [book, setBooks] = useState(null)
     const [recommendedBooks, setRecommendedBooks] = useState([])
     const {addToCart} = useCartContext()
-    const {addToWishlist} = useWishlistContext()
+    const {wishlistItems, addToWishlist, removeFromWishlist } = useWishlistContext()
     const [quantity, setQuantity] = useState(1)
-    
+
+    const wishlistItem = wishlistItems.find(w => w.productId?._id === book?._id)
+    const isInWishlist = !!wishlistItem
     const {loading, error} = useFetch(
         "https://backend-book-breeze-mu.vercel.app/books"
     )
@@ -99,9 +102,9 @@ if(loading){
                         <div className="p-4 position-relative">
                             <button 
                             className="btn btn-light position-absolute top-0 end-0 m-1"
-                            onClick={()=> addToWishlist(book?._id)}
+                            onClick={()=> isInWishlist ? removeFromWishlist(wishlistItem?._id) : addToWishlist(book?._id)}
                             >
-                                ♡
+                                {isInWishlist ? "❤️": "♡" }
                             </button>
                         <img 
                         src={book?.image} 
@@ -125,15 +128,22 @@ if(loading){
                                 <div className="d-flex align-items-center rounded">
                                     <button
                                         className="btn btn-light"
-                                        onClick={()=> setQuantity(Math.max(1, quantity -1))}
+                                        onClick={()=> {
+                                            setQuantity(Math.max(1, quantity -1))
+                                            toast.info("Quantity decreased")
+                                        } }
                                         disabled={quantity <= 1}
+                                        
                                         >
                                         -
                                     </button>
                                     <span className="px-3 fw-bold">{quantity}</span>
                                     <button
                                         className="btn btn-light"
-                                        onClick={() => setQuantity(quantity +1)}
+                                        onClick={() => {
+                                            setQuantity(quantity +1)
+                                            toast.success("Quantity Increased")
+                                        } }
                                         disabled={quantity >= book?.stock}
                                         >
                                         +
@@ -213,11 +223,11 @@ if(loading){
                     }}
                 />
                 </Link>
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
 
                     <Link to={`/product/${item._id}`}
                 className="text-decoration-none" style={{color: "black"}}>
-                    <h6 className="card-title">
+                    <h6 className="card-title" style={{minHeight: "48px"}}>
                         {item.title}
                     </h6>
                     </Link>
@@ -231,7 +241,7 @@ if(loading){
                     </p>
 
                     <button
-                        className="btn w-100 shadow"
+                        className="btn w-100 mt-auto"
                         style={{
                             backgroundColor: "#C9B59C"
                         }}

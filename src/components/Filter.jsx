@@ -111,18 +111,23 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
 
         {/* Rating */}
         <div>
-            <h6>Rating</h6>
-            {[4,3,2,1].map((star)=>(
+            <h6>Rating: {rating} ★ & above </h6>
                 <div>
                     <input 
-                    type="radio"
-                    name="rating"
-                    checked={rating === star}
-                    onChange={()=> setRating(star)}
+                    type="range"
+                    className="form-range"
+                    min="0"
+                    max="4"
+                    step="1"
+                    value={rating}
+                    onChange={(e)=> setRating(Number(e.target.value))}
                     />
-                    <label className="ms-2">{star} Stars & above</label>
+                    <div className="d-flex justify-content-between">
+                        <span>0</span>
+                        <span>4</span>
+                    </div>
                 </div>
-            ))}
+            
         </div>
         <hr />
 

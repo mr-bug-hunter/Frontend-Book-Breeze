@@ -8,7 +8,7 @@ const RomanceSection = ({search = ""})=>{
 
 
     const {addToCart} = useCartContext()
-    const {addToWishlist} = useWishlistContext()
+    const {wishlistItems, addToWishlist, removeFromWishlist} = useWishlistContext()
 
     const [price, setPrice] = useState(Number(sessionStorage.getItem("romance_price")) || 3000)
     const [rating, setRating] = useState(Number(sessionStorage.getItem("romance_rating")) || 0)
@@ -24,6 +24,14 @@ const RomanceSection = ({search = ""})=>{
         sessionStorage.setItem("romance_rating", rating)
         sessionStorage.setItem("romance_sort", sort)
     }, [price, rating, sort])
+
+    const isInWishlist = (bookId) => wishlistItems.some(w => w.productId?._id === bookId)
+
+    const toggleWishlist = (bookId)=>{
+        const item = wishlistItems.find(w => w.productId?._id === bookId)
+        item ? removeFromWishlist(item._id) : addToWishlist(bookId)
+    }
+
 
     if(loading){
         return(
@@ -122,17 +130,20 @@ const RomanceSection = ({search = ""})=>{
                                 {/* Rating */}
                                 <div>
                                     <h6 style={{color: "#972828"}}>Rating:</h6>
-                                    {[4,3,2,1].map((star)=>(
-                                        <div key={star}>
                                             <input 
-                                            type="radio" 
-                                            name="rating" 
-                                            checked={rating === star}
-                                            onChange={()=> setRating(star)}
+                                            type="range" 
+                                            className="form-range"
+                                            min="0"
+                                            max="4"
+                                            step="1"
+                                            value={rating} 
+                                            onChange={(e)=> setRating(Number(e.target.value))}
                                             />
-                                            <label className="ms-2">{star} Star & above</label>
-                                        </div>
-                                    ))}
+                                            <div className="d-flex justify-content-between">
+                                                <span>0</span>
+                                                <span>4</span>
+                                            </div>
+                                        
                                 </div>
                                 <hr />
 
@@ -176,9 +187,9 @@ const RomanceSection = ({search = ""})=>{
                                             <div className="card h-100">
                                                 <button
                                                 className="btn btn-light position-absolute top-0 end-0 m-1"
-                                                onClick={()=> addToWishlist(book?._id)}
+                                                onClick={()=> toggleWishlist(book?._id)}
                                                 >
-                                                    ♡
+                                                  {isInWishlist(book._id) ? "❤️" : "♡"}  
                                                 </button>
                                                 <Link to={`/product/${book._id}`}
                                                 className="text-decoration-none"

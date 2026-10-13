@@ -1,7 +1,7 @@
-import { useContext } from "react";
 import useCartContext from "../context/CartContext";
 import useFetch from "../Hooks/useFetch";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import useWishlistContext from "../context/WishlistContext";
 
 const Cart = ()=>{
@@ -91,7 +91,10 @@ const Cart = ()=>{
                                         <div className="d-flex align-items-center rounded">
                                         <button
                                         className="btn btn-outline-secondary"
-                                        onClick={()=> decreaseQuantity(item._id, true)}
+                                        onClick={()=> {
+                                            decreaseQuantity(item._id, false)
+                                            toast.info("Quantity decreased")
+                                        }}
                                         >
                                             -
                                         </button>
@@ -100,7 +103,10 @@ const Cart = ()=>{
                                             </p>
                                     <button
                                     className="btn btn-outline-secondary"
-                                    onClick={()=> addToCart(item.productId._id, true)}
+                                    onClick={()=> {
+                                        addToCart(item.productId._id, false)
+                                        toast.success("Quantity increased")
+                                    }}
                                     >
                                          +
                                     </button>

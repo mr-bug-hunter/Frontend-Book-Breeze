@@ -6,10 +6,15 @@ import useCartContext from "../context/CartContext";
 import useFetch from "../Hooks/useFetch";
 
 const AllBooks = ({search})=>{
-    const {addToWishlist} = useWishlistContext()
+    const {wishlistItems, addToWishlist, removeFromWishlist} = useWishlistContext()
+    
+    const isInWishlist = (bookId) => wishlistItems.some(w => w.productId?._id === bookId)
+    const toggleWishlist = (bookId)=> {
+        const item = wishlistItems.find(w => w.productId?._id === bookId)
+        item ? removeFromWishlist(item._id) : addToWishlist(bookId)
+    }
     const {addToCart} = useCartContext()
 
-    
     const [price, setPrice] = useState(Number(sessionStorage.getItem("filter_price")) || (3000)) 
     const [rating, setRating] = useState(Number(sessionStorage.getItem("filter_rating"))|| 0) 
     const [category, setCategory] = useState(
@@ -101,10 +106,10 @@ const AllBooks = ({search})=>{
                                         />
                                         </Link>
                                         <button className="btn btn-light position-absolute top-0 end-0 m-1"
-                                        
-                                        onClick={()=> addToWishlist(book?._id)}
+                                        style={{zIndex: 2}}
+                                        onClick={()=> toggleWishlist(book?._id)}
                                         >
-                                                ♡
+                                                {isInWishlist(book._id)? "❤️": "♡"}
                                             </button>
                                         <div className="card-body">
                                             <Link to={`/product/${book._id}`}
