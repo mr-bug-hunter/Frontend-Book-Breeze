@@ -129,7 +129,7 @@ const RomanceSection = ({search = ""})=>{
                                 <hr />
                                 {/* Rating */}
                                 <div>
-                                    <h6 style={{color: "#972828"}}>Rating:</h6>
+                                    <h6 style={{ color : "#972828"}}>Rating: {rating} ★ & above</h6>
                                             <input 
                                             type="range" 
                                             className="form-range"
