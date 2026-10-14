@@ -55,57 +55,6 @@ const Filter = ({price, setPrice, rating, setRating, category, setCategory, sort
                     <label className="ms-2">{cat}</label>
                 </div>
             ))}
-            {/* <div>
-                <input 
-                type="checkbox"
-                checked={category === "Sci-Fi"}
-                onChange={(e)=> setCategory(e.target.checked ? "Sci-Fi" : "")}
-                />
-                <label className="ms-2">Sci-Fi</label>
-            </div>
-
-            <div>
-                    <input
-                        type="checkbox"
-                        checked={category === "Novel"}
-                        onChange={(e) => setCategory(e.target.checked ? "Novel" : "")}
-                    />
-                    <label className="ms-2">Novel</label>
-                </div>
-                <div>
-                    <input
-                        type="checkbox"
-                        checked={category === "Autobiography"}
-                        onChange={(e) => setCategory(e.target.checked ? "Autobiography" : "")}
-                    />
-                    <label className="ms-2">Autobiography</label>
-                </div>
-                <div>
-                    <input
-                        type="checkbox"
-                        checked={category === "Political Fiction"}
-                        onChange={(e) => setCategory(e.target.checked ? "Political Fiction" : "")}
-                    />
-                    <label className="ms-2">Political Fiction</label>
-                </div>
-
-                <div>
-                    <input
-                        type="checkbox"
-                        checked={category === "Horror"}
-                        onChange={(e) => setCategory(e.target.checked ? "Horror" : "")}
-                    />
-                    <label className="ms-2">Horror</label>
-                </div>
-
-                <div>
-                    <input
-                        type="checkbox"
-                        checked={category === "Romance"}
-                        onChange={(e) => setCategory(e.target.checked ? "Romance" : "")}
-                    />
-                    <label className="ms-2">Romance</label>
-                </div> */}
         </div>
         <hr />
 
