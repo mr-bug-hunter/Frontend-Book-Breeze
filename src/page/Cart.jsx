@@ -6,9 +6,9 @@ import useWishlistContext from "../context/WishlistContext";
 
 const Cart = ()=>{
 
-    const {cartItems, addToCart, removeFromCart, decreaseQuantity} = useCartContext()
+    const {cartItems, addToCart, decreaseQuantity, removeFromCart} = useCartContext()
 
-    const {addToWishlist} = useWishlistContext()
+    const { wishlistItems, addToWishlist} = useWishlistContext()
 
     const validCartItem = cartItems.filter((item) => item.productId)
 
@@ -25,6 +25,17 @@ const Cart = ()=>{
         const {data, loading, error}= useFetch(
             "https://backend-book-breeze-mu.vercel.app/books/cart", {cartItems: []}
         )
+
+        const IsInWishlist = (bookId) =>
+            wishlistItems.some(w => w.productId?._id === bookId)
+        
+        const handleAddToWishlist = (bookId) =>{
+            if(IsInWishlist(bookId)){
+                toast.info("Book is already in wishlist")
+            }else{
+                addToWishlist(bookId)
+            }
+        }
 
         if(loading){
             return(
@@ -125,10 +136,9 @@ const Cart = ()=>{
 
 
                                         <Link className="btn btn-secondary"
-                                        onClick={() => {
-                                            addToWishlist(item.productId._id) //wishlist me add
+                                        onClick={() => 
+                                            handleAddToWishlist(item.productId._id)} //wishlist me add
                                             // removeFromCart(item._id) //cart se hatao
-                                        }}
                                     >
                                         Add to Wishlist 
                                     </Link>
