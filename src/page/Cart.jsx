@@ -127,10 +127,10 @@ const Cart = ()=>{
                                         <Link className="btn btn-secondary"
                                         onClick={() => {
                                             addToWishlist(item.productId._id) //wishlist me add
-                                            removeFromCart(item._id) //cart se hatao
+                                            // removeFromCart(item._id) //cart se hatao
                                         }}
                                     >
-                                        Move to Wishlist 
+                                        Add to Wishlist 
                                     </Link>
 
                                     </div>

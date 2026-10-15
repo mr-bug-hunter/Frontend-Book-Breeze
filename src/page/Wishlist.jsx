@@ -2,7 +2,6 @@ import useWishlistContext from "../context/WishlistContext"
 import useCartContext from "../context/CartContext"
 import useFetch from "../Hooks/useFetch"
 import { Link } from "react-router-dom"
-import { toast } from "react-toastify"
 
 const wishlist = ()=>{
     const { wishlistItems, removeFromWishlist} = useWishlistContext()
@@ -77,10 +76,10 @@ const wishlist = ()=>{
                                 style={{backgroundColor: "#C9B59C"}}
                                 onClick={()=> {
                                         addToCart(item.productId._id) //move to cart
-                                        removeFromWishlist(item._id) //remove from wishlist
+                                        // removeFromWishlist(item._id) //remove from wishlist
                                     }}
                                 >
-                                    Move to Cart
+                                    Add to Cart
                                     </button>
                                     <button className="btn w-100 rounded-0 shadow"
                                     style={{backgroundColor: "#D0311E"}}
